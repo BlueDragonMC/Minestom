@@ -67,13 +67,13 @@ public final class PacketListenerManager {
         setListener(ClientSpectatePacket.class, SpectateListener::listener);
         setListener(ClientEditBookPacket.class, BookListener::listener);
 
-        setListener(EncryptionResponsePacket.class, EncryptionResponsePacket::process);
-        setListener(HandshakePacket.class, HandshakePacket::process);
-        setListener(LegacyServerListPingPacket.class, LegacyServerListPingPacket::process);
-        setListener(LoginPluginResponsePacket.class, LoginPluginResponsePacket::process);
-        setListener(LoginStartPacket.class, LoginStartPacket::process);
-        setListener(PingPacket.class, PingPacket::process);
-        setListener(StatusRequestPacket.class, StatusRequestPacket::process);
+        setListener(EncryptionResponsePacket.class, EncryptionResponseListener::listener);
+        setListener(HandshakePacket.class, HandshakeListener::listener);
+        setListener(LegacyServerListPingPacket.class, (LegacyServerListPingPacket packet, PlayerConnection connection) -> { /* no-op */ });
+        setListener(LoginPluginResponsePacket.class, LoginPluginResponseListener::listener);
+        setListener(LoginStartPacket.class, LoginStartListener::listener);
+        setListener(PingPacket.class, PingListener::listener);
+        setListener(StatusRequestPacket.class, StatusRequestListener::listener);
     }
 
     /**
