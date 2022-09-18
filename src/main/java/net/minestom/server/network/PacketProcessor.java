@@ -6,6 +6,7 @@ import net.minestom.server.network.packet.client.ClientPacket;
 import net.minestom.server.network.packet.client.ClientPacketsHandler;
 import net.minestom.server.network.packet.client.ClientPreplayPacket;
 import net.minestom.server.network.packet.client.handshake.HandshakePacket;
+import net.minestom.server.network.packet.client.play.ClientKeepAlivePacket;
 import net.minestom.server.network.player.PlayerConnection;
 import net.minestom.server.utils.binary.BinaryReader;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +45,11 @@ public record PacketProcessor(@NotNull ClientPacketsHandler statusHandler,
         final ClientPacket packet = create(connection.getConnectionState(), packetId, body);
         if (packet instanceof ClientPreplayPacket prePlayPacket) {
             MinecraftServer.getPacketListenerManager().processClientPrePlayPacket(prePlayPacket, connection);
+        } else if (packet instanceof ClientKeepAlivePacket keepAlivePacket) {
+            // Process keep-alive packets instantly to get a more accurate ping reading
+            final Player player = connection.getPlayer();
+            assert player != null;
+            MinecraftServer.getPacketListenerManager().processClientPacket(keepAlivePacket, player);
         } else {
             final Player player = connection.getPlayer();
             assert player != null;
